@@ -1,33 +1,27 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';  // Import useNavigate
-import { UserCircle, Lock, ArrowRight } from 'lucide-react';
-import axios from 'axios';
-import './Auth.css';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { UserCircle, Lock, ArrowRight } from "lucide-react";
+import axios from "axios";
+import "./Auth.css";
 
 const Login = () => {
   const [isAdmin, setIsAdmin] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-
-  const [email,setEmail]= useState("");
-  const[password,setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   function handleEmailChange(event) {
     setEmail(() => event.target.value);
-   
   }
 
   function handlePasswordChange(event) {
     setPassword(() => event.target.value);
-    
   }
- 
 
-  const navigate = useNavigate(); // Initialize navigate hook
+  const navigate = useNavigate();
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage("");
 
     try {
       const response = await axios.post(
@@ -35,52 +29,55 @@ const Login = () => {
         {
           email,
           password,
+          isAdmin,
         }
       );
 
-      console.log("Logged in", response);
+      console.log("Login Response:", response.data);
 
       if (response.data && response.data.data.access_token) {
         localStorage.setItem("token", response.data.data.access_token);
-      
+        localStorage.setItem("role", response.data.data.role);
+
+        // Check role and navigate accordingly
+        if (isAdmin && response.data.data.role !== "admin") {
+          setErrorMessage("Invalid credentials for admin login.");
+          return;
+        }
+
+        if (!isAdmin && response.data.data.role === "admin") {
+          setErrorMessage("Please log in as an admin.");
+          return;
+        }
+
+        navigate(isAdmin ? "/admindashboard" : "/userdashboard");
+      } else {
+        setErrorMessage("Login failed. Please try again.");
       }
     } catch (error) {
-     console.log(error);
-      
-
-      
+      setErrorMessage(error.response?.data?.message || "Failed to login");
+      console.error(
+        "Login failed:",
+        error.response?.data?.message || error.message
+      );
     }
-    // Handle login logic here, you can check credentials
-    console.log('Login submitted:', { ...formData, isAdmin });
-
-    if (isAdmin) {
-      navigate('/admindashboard');  // Navigate to AdminDashboard if the user is an admin
-    } else {
-      navigate('/userdashboard');  // Navigate to UserDashboard if it's a normal user
-    }
-  };
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
   };
 
   return (
     <div className="auth-container">
       <div className="auth-box">
-        <h2 className="auth-title">{isAdmin ? 'Admin Login' : 'User Login'}</h2>
-        
+        <h2 className="auth-title">{isAdmin ? "Admin Login" : "User Login"}</h2>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+
         <div className="toggle-container">
-          <button 
-            className={`toggle-btn ${!isAdmin ? 'active' : ''}`}
+          <button
+            className={`toggle-btn ${!isAdmin ? "active" : ""}`}
             onClick={() => setIsAdmin(false)}
           >
             User
           </button>
-          <button 
-            className={`toggle-btn ${isAdmin ? 'active' : ''}`}
+          <button
+            className={`toggle-btn ${isAdmin ? "active" : ""}`}
             onClick={() => setIsAdmin(true)}
           >
             Admin
@@ -119,8 +116,10 @@ const Login = () => {
         </form>
 
         <p className="auth-footer">
-          Don't have an account? 
-          <Link to="/signup" className="auth-link">Sign up</Link>
+          Don&apos;t have an account?
+          <Link to="/signup" className="auth-link">
+            Sign up
+          </Link>
         </p>
       </div>
     </div>

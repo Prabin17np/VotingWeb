@@ -3,55 +3,36 @@ const { generateToken } = require("../security/jwt-util");
 
 const login = async (req, res) => {
   try {
-    //fetching all the data from users table
-    const user = await User.findOne({ where: { email: req.body.email } });
-    if (req.body.email == null) {
-      return res.status(500).send({ message: "email is required" });
+    const { email, password, isAdmin } = req.body; // Capture isAdmin from frontend
+
+    // Validate inputs
+    if (!email) return res.status(400).send({ message: "Email is required" });
+    if (!password) return res.status(400).send({ message: "Password is required" });
+
+    // Check if user exists
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).send({ message: "User not found" });
+
+    // Check if password is correct
+    if (user.password !== password) {
+      return res.status(401).send({ message: "Incorrect credentials" });
     }
-    if (req.body.password == "") {
-      return res.status(500).send({ message: "password is required" });
+
+    // Role-based login restriction
+    if (isAdmin && user.role !== "admin") {
+      return res.status(403).send({ message: "Access denied. Not an admin account" });
     }
-    if (req.body.password != user.password) {
-      return res.status(500).send({ message: "Incorrect credentials" });
+
+    if (!isAdmin && user.role === "admin") {
+      return res.status(403).send({ message: "Please log in as an admin" });
     }
 
+    // Generate JWT Token
+    const token = generateToken({ user: user.toJSON() });
 
-    if (!user) {
-      return res.status(500).send({ message: "user not found" });
-    }
-    if (user.password == req.body.password) {
-      const token = generateToken({ user: user.toJSON() });
-      return res.status(200).send({
-        data: { access_token: token, role: user.role, userId: user.userId },
-
-        message: "successfully logged in",
-      });
-    }
-    const userData = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      
-    };
-
-    // Generate token
-    const accessToken = jwt.sign(userData, "secret", {
-      expiresIn: "1h",
-    });
-
-    res.cookie("token", accessToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-      maxAge: 3600000,
-    });
-
-    console.log("Successfully logged in");
-
-    return res.status(200).json({
-      message: "Login successful",
-      user: userData,
+    return res.status(200).send({
+      data: { access_token: token, role: user.role, userId: user.userId },
+      message: "Successfully logged in",
     });
   } catch (e) {
     console.log(e);

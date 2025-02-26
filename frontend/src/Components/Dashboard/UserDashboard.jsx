@@ -1,40 +1,66 @@
-import React, { useState } from 'react';
-import { Vote, History, CheckCircle2, AlertCircle, ChevronRight, Timer, BarChart3, ArrowLeft, LogOut } from 'lucide-react';
-import './UserDashboard.css';
+import { useState } from "react";
+import {
+  Vote,
+  CheckCircle2,
+  AlertCircle,
+  ChevronRight,
+  Timer,
+  BarChart3,
+  ArrowLeft,
+  LogOut,
+} from "lucide-react";
+import "./UserDashboard.css";
+import { useNavigate } from "react-router-dom";
 
 function UserDashboard() {
+  const navigate = useNavigate();
   const [selectedPoll, setSelectedPoll] = useState(null);
-  const [selectedCandidate, setSelectedCandidate] = useState('');
+  const [selectedCandidate, setSelectedCandidate] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showResults, setShowResults] = useState(false);
 
   // Sample data - In a real app, this would come from your backend
   const polls = [
     {
-      id: '1',
-      title: 'City Council Election 2025',
-      description: 'Select your representative for the city council.',
-      startDate: '2025-03-01',
-      endDate: '2025-03-02',
-      status: 'active',
+      id: "1",
+      title: "City Council Election 2025",
+      description: "Select your representative for the city council.",
+      startDate: "2025-03-01",
+      endDate: "2025-03-02",
+      status: "active",
       hasVoted: false,
       candidates: [
-        { id: 'c1', name: 'John Smith', party: 'Progressive Party', votes: 156 },
-        { id: 'c2', name: 'Sarah Johnson', party: 'Conservative Party', votes: 142 },
-        { id: 'c3', name: 'Michael Brown', party: 'Independent', votes: 89 },
+        {
+          id: "c1",
+          name: "John Smith",
+          party: "Progressive Party",
+          votes: 156,
+        },
+        {
+          id: "c2",
+          name: "Sarah Johnson",
+          party: "Conservative Party",
+          votes: 142,
+        },
+        { id: "c3", name: "Michael Brown", party: "Independent", votes: 89 },
       ],
     },
     {
-      id: '2',
-      title: 'School Board Election',
-      description: 'Choose the next school board representative.',
-      startDate: '2025-04-15',
-      endDate: '2025-04-16',
-      status: 'active',
+      id: "2",
+      title: "School Board Election",
+      description: "Choose the next school board representative.",
+      startDate: "2025-04-15",
+      endDate: "2025-04-16",
+      status: "active",
       hasVoted: true,
       candidates: [
-        { id: 'c4', name: 'Emily Davis', party: 'Education First', votes: 203 },
-        { id: 'c5', name: 'Robert Wilson', party: 'Community Voice', votes: 178 },
+        { id: "c4", name: "Emily Davis", party: "Education First", votes: 203 },
+        {
+          id: "c5",
+          name: "Robert Wilson",
+          party: "Community Voice",
+          votes: 178,
+        },
       ],
     },
   ];
@@ -46,7 +72,7 @@ function UserDashboard() {
 
   const confirmVote = () => {
     // Here you would make an API call to submit the vote
-    console.log('Vote submitted for candidate:', selectedCandidate);
+    console.log("Vote submitted for candidate:", selectedCandidate);
     setShowConfirmation(false);
     setSelectedPoll(null);
   };
@@ -59,13 +85,17 @@ function UserDashboard() {
     return ((votes / totalVotes) * 100).toFixed(1);
   };
 
-  const handleLogout = () => {
-    // Implement logout logic here (e.g., clear session, redirect, etc.)
-    console.log("Logging out...");
-    // Redirect to login page (for example):
-    // window.location.href = "/login";
-  };
+  const handleLogout = async () => {
+    try {
+      // Remove the token from local storage
+      localStorage.removeItem("token");
 
+      // Redirect the user to the login page or homepage after logout
+      navigate("/login"); // Replace with your actual login page path
+    } catch (err) {
+      console.error("Error logging out:", err);
+    }
+  };
   return (
     <div className="user-dashboard">
       <header className="header">
@@ -97,7 +127,9 @@ function UserDashboard() {
                     <p>{poll.description}</p>
                     <div className="poll-end-date">
                       <Timer className="icon-small" />
-                      <span>Ends on {new Date(poll.endDate).toLocaleDateString()}</span>
+                      <span>
+                        Ends on {new Date(poll.endDate).toLocaleDateString()}
+                      </span>
                     </div>
                   </div>
                   <div className="poll-actions">
@@ -149,7 +181,9 @@ function UserDashboard() {
               {selectedPoll?.candidates.map((candidate) => (
                 <label
                   key={candidate.id}
-                  className={`candidate ${selectedCandidate === candidate.id ? 'selected' : ''}`}
+                  className={`candidate ${
+                    selectedCandidate === candidate.id ? "selected" : ""
+                  }`}
                 >
                   <input
                     type="radio"
@@ -173,7 +207,7 @@ function UserDashboard() {
               <button
                 onClick={handleVote}
                 disabled={!selectedCandidate}
-                className={selectedCandidate ? 'active' : 'disabled'}
+                className={selectedCandidate ? "active" : "disabled"}
               >
                 Submit Vote
               </button>
@@ -209,7 +243,10 @@ function UserDashboard() {
 
             <div className="candidate-results">
               {selectedPoll.candidates.map((candidate) => {
-                const percentage = calculatePercentage(candidate.votes, calculateTotalVotes(selectedPoll.candidates));
+                const percentage = calculatePercentage(
+                  candidate.votes,
+                  calculateTotalVotes(selectedPoll.candidates)
+                );
                 return (
                   <div key={candidate.id} className="candidate-result">
                     <div className="candidate-info">
@@ -239,9 +276,15 @@ function UserDashboard() {
           <div className="modal-content">
             <AlertCircle className="alert-icon" />
             <h3>Confirm Your Vote</h3>
-            <p>Your vote is final and cannot be changed. Are you sure you want to proceed?</p>
+            <p>
+              Your vote is final and cannot be changed. Are you sure you want to
+              proceed?
+            </p>
             <div className="modal-actions">
-              <button onClick={() => setShowConfirmation(false)} className="cancel-button">
+              <button
+                onClick={() => setShowConfirmation(false)}
+                className="cancel-button"
+              >
                 Cancel
               </button>
               <button onClick={confirmVote} className="confirm-button">

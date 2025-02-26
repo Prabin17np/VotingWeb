@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';  // Import useNavigate
-import { UserCircle, Lock, Mail, ArrowRight } from 'lucide-react';
-import axios from 'axios';
-import './Auth.css';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { UserCircle, Lock, Mail, ArrowRight } from "lucide-react";
+import axios from "axios";
+import "./Auth.css";
 
 const Signup = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
-    role:''
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    role: "",
   });
 
   const navigate = useNavigate(); // Initialize navigate hook
@@ -20,56 +20,56 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle signup logic here
-    console.log('Signup submitted:', { ...formData, isAdmin });
-  
+    console.log("Signup submitted:", { ...formData, isAdmin });
+
     // Set the role based on the isAdmin state
-    const role = isAdmin ? 'admin' : 'user';
+    const role = isAdmin ? "admin" : "user";
     console.log(role);
-  
+
     try {
       const response = await axios.post("http://localhost:5000/api/user", {
         username: formData.fullName,
         email: formData.email,
         password: formData.password,
-        role: role  // Send the correct role
+        role: role, // Send the correct role
       });
-  
+
       console.log("User registered successfully", response);
-  
+
       // After successful signup, navigate to the appropriate dashboard
       if (isAdmin) {
-        navigate('/admindashboard');  // Navigate to AdminDashboard if the user is an admin
+        navigate("/admindashboard"); // Navigate to AdminDashboard if the user is an admin
       } else {
-        navigate('/userdashboard');  // Navigate to UserDashboard if it's a normal user
+        navigate("/userdashboard"); // Navigate to UserDashboard if it's a normal user
       }
-  
     } catch (err) {
       console.log(err);
     }
   };
-  
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   return (
     <div className="auth-container">
       <div className="auth-box">
-        <h2 className="auth-title">{isAdmin ? 'Admin Registration' : 'User Registration'}</h2>
-        
+        <h2 className="auth-title">
+          {isAdmin ? "Admin Registration" : "User Registration"}
+        </h2>
+
         <div className="toggle-container">
-          <button 
-            className={`toggle-btn ${!isAdmin ? 'active' : ''}`}
+          <button
+            className={`toggle-btn ${!isAdmin ? "active" : ""}`}
             onClick={() => setIsAdmin(false)}
           >
             User
           </button>
-          <button 
-            className={`toggle-btn ${isAdmin ? 'active' : ''}`}
+          <button
+            className={`toggle-btn ${isAdmin ? "active" : ""}`}
             onClick={() => setIsAdmin(true)}
           >
             Admin
@@ -126,14 +126,16 @@ const Signup = () => {
           </div>
 
           <button type="submit" className="submit-btn">
-            {isAdmin ? 'Register as Admin' : 'Register as User'}
+            {isAdmin ? "Register as Admin" : "Register as User"}
             <ArrowRight size={20} />
           </button>
         </form>
 
         <p className="auth-footer">
-          Already have an account? 
-          <Link to="/login" className="auth-link">Login</Link>
+          Already have an account?
+          <Link to="/login" className="auth-link">
+            Login
+          </Link>
         </p>
       </div>
     </div>
