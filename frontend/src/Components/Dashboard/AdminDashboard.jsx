@@ -182,9 +182,8 @@ export function AdminDashboard() {
         </button>
       </div>
 
-      <div className="table-container">
-        <AdminPollTable />
-        {/* <div className="search-bar">
+      <AdminPollTable />
+      {/* <div className="search-bar">
           <Search className="icon" />
           <input
             type="text"
@@ -193,7 +192,7 @@ export function AdminDashboard() {
           />
         </div> */}
 
-        {/* <table className="polls-table">
+      {/* <table className="polls-table">
           <DataTable
             columns={pollColumns}
             data={polls}
@@ -202,7 +201,6 @@ export function AdminDashboard() {
             noDataComponent="No polls found"
           />
         </table> */}
-      </div>
     </div>
   );
 

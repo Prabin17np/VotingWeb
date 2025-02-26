@@ -1,6 +1,7 @@
 import DataTable from "react-data-table-component";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import AdminNavbar from "./AdminNavbar";
 
 export default function AdminUserTable() {
   const [users, setUsers] = useState([]); // State to hold user data
@@ -45,6 +46,7 @@ export default function AdminUserTable() {
   return (
     <div>
       <h1>User List</h1>
+      <AdminNavbar />
       <DataTable
         title="User List"
         columns={userColumns}

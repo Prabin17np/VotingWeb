@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import AdminNavbar from "../navbar/AdminNavbar";
+import "./RenderResult.css";
 
 /* eslint-disable react/prop-types */
 const RenderResults = () => {
@@ -25,6 +27,7 @@ const RenderResults = () => {
     <div className="admin-content">
       <div className="section-header">
         <h2 className="section-title">Election Results</h2>
+        <AdminNavbar />
       </div>
       <div className="result-cards">
         {polls.map((poll) => (
