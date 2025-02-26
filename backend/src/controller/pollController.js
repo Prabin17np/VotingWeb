@@ -110,6 +110,36 @@ const updatePollStatus = async (req, res) => {
   }
 };
 
+const incrementTotalVotes = async (req, res) => {
+  try {
+    // const pollId = req.params.pollId;
 
+    const { pollId } = req.body;
+    console.log(`Incrementing total votes for poll with ID: ${pollId}`);
 
-module.exports = { create, deletePoll, getAllPoll, getPollById, updatePollStatus };
+    // Find the poll by ID
+    const poll = await Poll.findByPk(pollId);
+    console.log("Poll found:", poll);
+
+    if (!poll) {
+      return res.status(404).send({ message: "Poll not found" });
+    }
+
+    // Increment the total votes by the specified amount
+    poll.totalvote += 1;
+
+    // Save the updated poll
+    await poll.save();
+
+    res.status(200).send({
+      message: `Total votes incremented by 1`,
+      data: poll,
+    });
+  } catch (error) {
+    console.error("Error incrementing total votes:", error);
+    res.status(500).json({ message: "Failed to increment total votes" });
+  }
+
+}
+
+module.exports = { create, deletePoll, getAllPoll, getPollById, updatePollStatus, incrementTotalVotes };

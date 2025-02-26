@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Vote,
-  CheckCircle2,
   AlertCircle,
   ChevronRight,
   Timer,
@@ -11,6 +10,7 @@ import {
 } from "lucide-react";
 import "./UserDashboard.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function UserDashboard() {
   const navigate = useNavigate();
@@ -19,55 +19,33 @@ function UserDashboard() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showResults, setShowResults] = useState(false);
 
-  // Sample data - In a real app, this would come from your backend
-  const polls = [
-    {
-      id: "1",
-      title: "City Council Election 2025",
-      description: "Select your representative for the city council.",
-      startDate: "2025-03-01",
-      endDate: "2025-03-02",
-      status: "active",
-      hasVoted: false,
-      candidates: [
-        {
-          id: "c1",
-          name: "John Smith",
-          party: "Progressive Party",
-          votes: 156,
-        },
-        {
-          id: "c2",
-          name: "Sarah Johnson",
-          party: "Conservative Party",
-          votes: 142,
-        },
-        { id: "c3", name: "Michael Brown", party: "Independent", votes: 89 },
-      ],
-    },
-    {
-      id: "2",
-      title: "School Board Election",
-      description: "Choose the next school board representative.",
-      startDate: "2025-04-15",
-      endDate: "2025-04-16",
-      status: "active",
-      hasVoted: true,
-      candidates: [
-        { id: "c4", name: "Emily Davis", party: "Education First", votes: 203 },
-        {
-          id: "c5",
-          name: "Robert Wilson",
-          party: "Community Voice",
-          votes: 178,
-        },
-      ],
-    },
-  ];
+  const [polls, setPolls] = useState([]);
 
-  const handleVote = () => {
-    if (!selectedCandidate) return;
-    setShowConfirmation(true);
+  const handleVote = async (pollId) => {
+    try {
+      const token = localStorage.getItem("token");
+      // Make API call to increment the total votes
+      console.log("Incrementing total votes for poll:", pollId);
+      console.log(`Bearer ${localStorage.getItem("token")}`);
+      const response = await axios.patch(
+        `http://localhost:5000/api/poll/vote/${pollId}`,
+        { pollId: pollId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("Vote submitted successfully:", response.data);
+      alert("Vote submitted successfully!");
+      setShowConfirmation(false);
+      setSelectedPoll(null);
+      // Optionally, update the polls list or re-fetch to show updated results
+    } catch (err) {
+      console.error("Error submitting vote:", err);
+      // Optionally, handle error state here
+    }
   };
 
   const confirmVote = () => {
@@ -96,6 +74,23 @@ function UserDashboard() {
       console.error("Error logging out:", err);
     }
   };
+
+  useEffect(() => {
+    const fetchPolls = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:5000/api/poll", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setPolls(response.data); // Set the fetched users
+        console.log(`Data fetched: ${JSON.stringify(response.data)}`);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+    fetchPolls();
+  }, []);
+
   return (
     <div className="user-dashboard">
       <header className="header">
@@ -113,57 +108,39 @@ function UserDashboard() {
         </div>
       </header>
 
-      {!selectedPoll && (
-        <div className="polls-list">
-          <h2>Active Elections</h2>
-          <p>Cast your vote in ongoing elections</p>
+      <div className="polls-list">
+        <h2>Active Polls</h2>
+        <p>Cast your vote in ongoing polls</p>
 
-          <div className="polls">
-            {polls.map((poll) => (
-              <div key={poll.id} className="poll">
-                <div className="poll-header">
-                  <div>
-                    <h3>{poll.title}</h3>
-                    <p>{poll.description}</p>
-                    <div className="poll-end-date">
-                      <Timer className="icon-small" />
-                      <span>
-                        Ends on {new Date(poll.endDate).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="poll-actions">
-                    {poll.hasVoted ? (
-                      <>
-                        <span className="voted">Voted</span>
-                        <button
-                          onClick={() => {
-                            setSelectedPoll(poll);
-                            setShowResults(true);
-                          }}
-                          className="view-results-button"
-                        >
-                          <BarChart3 className="icon-small" />
-                          View Results
-                        </button>
-                      </>
-                    ) : (
-                      <button
-                        onClick={() => setSelectedPoll(poll)}
-                        className="cast-vote-button"
-                      >
-                        Cast Vote
-                        <ChevronRight className="icon-small" />
-                      </button>
-                    )}
+        <div className="polls">
+          {polls.map((poll) => (
+            <div key={poll.pollId} className="poll">
+              <div className="poll-header">
+                <div>
+                  <h3>{poll.title}</h3>
+                  <p>{poll.description}</p>
+                  <div className="poll-end-date">
+                    <Timer className="icon-small" />
+                    <span>
+                      Ends on {new Date(poll.enddate).toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
+                <div className="poll-actions">
+                  <button
+                    onClick={() => handleVote(poll.pollId)}
+                    className="cast-vote-button"
+                  >
+                    Cast Vote
+                    <ChevronRight className="icon-small" />
+                  </button>
+                </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      )}
-
+      </div>
+      {/* 
       {selectedPoll && !showResults && (
         <div className="voting-booth">
           <button
@@ -214,7 +191,7 @@ function UserDashboard() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {selectedPoll && showResults && (
         <div className="poll-results">
