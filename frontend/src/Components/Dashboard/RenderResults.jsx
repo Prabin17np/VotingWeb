@@ -1,5 +1,26 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 /* eslint-disable react/prop-types */
-const RenderResults = ({ polls }) => {
+const RenderResults = () => {
+  const [polls, setPolls] = useState([]);
+
+  useEffect(() => {
+    const fetchPolls = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:5000/api/poll", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setPolls(response.data); // Set the fetched users
+        console.log(`Data fetched: ${JSON.stringify(response.data)}`);
+      } catch (err) {
+        console.log(err.message);
+      }
+    };
+    fetchPolls();
+  }, []);
+
   return (
     <div className="admin-content">
       <div className="section-header">
@@ -7,17 +28,20 @@ const RenderResults = ({ polls }) => {
       </div>
       <div className="result-cards">
         {polls.map((poll) => (
-          <div key={poll.id} className="result-card">
+          <div key={poll.pollId} className="result-card">
             <h3>{poll.title}</h3>
             <div>
-              {poll.startdate} - {poll.enddate}
+              {poll.startdate
+                ? new Date(poll.startdate).toISOString().split("T")[0]
+                : ""}{" "}
+              -{" "}
+              {poll.enddate
+                ? new Date(poll.enddate).toISOString().split("T")[0]
+                : ""}
             </div>
             <div>
-              <span>Total Votes: {poll.totalvotes}</span>
+              <span>Total Votes: {poll.totalvote}</span>
             </div>
-            <button className="view-detailed-results">
-              View detailed results →
-            </button>
           </div>
         ))}
       </div>

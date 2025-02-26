@@ -7,9 +7,9 @@ import "./AdminDashboard.css";
 import AdminNavbar from "../navbar/AdminNavbar";
 import { useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import RenderPolls from "./AdminPollTable";
 import RenderUsers from "./RenderUsers";
 import RenderResults from "./RenderResults";
+import AdminPollTable from "./AdminPollTable";
 
 const StatusButton = ({ id, handleStatusUpdate }) => {
   return (
@@ -169,7 +169,7 @@ export function AdminDashboard() {
     </header>
   );
 
-  const renderPolls = () => (
+  const RenderPolls = () => (
     <div className="admin-content">
       <div className="section-header">
         <h2 className="section-title">Active Polls</h2>
@@ -183,16 +183,17 @@ export function AdminDashboard() {
       </div>
 
       <div className="table-container">
-        <div className="search-bar">
+        <AdminPollTable />
+        {/* <div className="search-bar">
           <Search className="icon" />
           <input
             type="text"
             placeholder="Search polls..."
             className="search-input"
           />
-        </div>
+        </div> */}
 
-        <table className="polls-table">
+        {/* <table className="polls-table">
           <DataTable
             columns={pollColumns}
             data={polls}
@@ -200,7 +201,7 @@ export function AdminDashboard() {
             highlightOnHover
             noDataComponent="No polls found"
           />
-        </table>
+        </table> */}
       </div>
     </div>
   );
@@ -339,7 +340,8 @@ export function AdminDashboard() {
       <AdminNavbar />
       {activeTab === "polls" && (
         // <RenderPolls polls={polls} setPolls={setPolls} />
-        <RenderPolls polls={polls} />
+        // <RenderPolls polls={polls} />
+        <RenderPolls />
       )}
       {activeTab === "users" && <RenderUsers />}
       {activeTab === "results" && <RenderResults polls={polls} />}

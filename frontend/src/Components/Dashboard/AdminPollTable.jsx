@@ -23,7 +23,7 @@ const StatusButton = ({ id, handleStatusUpdate }) => {
   );
 };
 
-const RenderPolls = () => {
+const AdminPollTable = () => {
   const [polls, setPolls] = useState([]);
 
   const pollColumns = [
@@ -125,18 +125,16 @@ const RenderPolls = () => {
   }, []);
 
   return (
-    <div className="admin-content">
-      <div className="table-container">
-        <DataTable
-          columns={pollColumns}
-          data={polls}
-          pagination
-          highlightOnHover
-          noDataComponent="No polls found"
-        />
-      </div>
+    <div className="table-container">
+      <DataTable
+        columns={pollColumns}
+        data={polls}
+        pagination
+        highlightOnHover
+        noDataComponent="No polls found"
+      />
     </div>
   );
 };
 
-export default RenderPolls;
+export default AdminPollTable;
