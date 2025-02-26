@@ -1,0 +1,335 @@
+/* General Styles */
+.user-dashboard {
+    font-family: Arial, sans-serif;
+    background-color: #f9fafb;
+    /* Light background */
+    min-height: 100vh;
+    color: #1f2937;
+    /* Dark text for better contrast */
+}
+
+/* Header */
+.header {
+    background-color: #ffffff;
+    /* White background */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.logo h1 {
+    font-size: 1.5rem;
+    color: #2563eb;
+    /* Blue color for the logo text */
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    color: #2563eb;
+    /* Blue color for icons */
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+/* Polls List */
+.polls-list {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    color: #1f2937;
+}
+
+.poll {
+    background-color: #ffffff;
+    /* White background */
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.poll-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.poll-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Buttons */
+.cast-vote-button,
+.view-results-button {
+    background-color: #2563eb;
+    /* Blue button */
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+
+.cast-vote-button:hover,
+.view-results-button:hover {
+    background-color: #1d4ed8;
+    /* Darker blue on hover */
+}
+
+/* Voted Tag */
+.voted {
+    background-color: #d1fae5;
+    /* Light green for voted tag */
+    color: #16a34a;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-weight: 600;
+}
+
+/* Voting Booth */
+.voting-booth {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    /* White background */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    color: #1f2937;
+}
+
+/* Candidate Selection */
+.candidates {
+    margin-top: 1.5rem;
+}
+
+.candidate {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #d1d5db;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    background-color: white;
+    color: #1f2937;
+    font-weight: 500;
+}
+
+.candidate.selected {
+    border-color: #2563eb;
+    /* Blue border for selected candidate */
+    background-color: #e0f2fe;
+    /* Light blue background for selected */
+    font-weight: 700;
+}
+
+/* Submit Button */
+.submit-button button {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+}
+
+.submit-button .active {
+    background-color: #2563eb;
+    /* Blue button */
+    cursor: pointer;
+}
+
+.submit-button .disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+    color: #6b7280;
+}
+
+/* Poll Results */
+.poll-results {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    /* White background */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    color: #1f2937;
+}
+
+.results-card {
+    margin-top: 2rem;
+}
+
+.candidate-result {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: #f1f5f9;
+    /* Light grey background for each candidate result */
+    border-radius: 0.375rem;
+}
+
+.candidate-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.candidate-info h3 {
+    font-weight: 600;
+    color: #1f2937;
+    /* Dark text for candidate name */
+}
+
+.candidate-info p {
+    color: #6b7280;
+    /* Gray color for party name */
+}
+
+
+.vote-count {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    font-weight: 600;
+    color: #2563eb;
+    /* Blue for vote count */
+}
+
+.vote-count span {
+    font-size: 1.25rem;
+    /* Slightly larger text for the vote count */
+}
+
+.vote-count .percentage {
+    font-size: 1rem;
+    color: #6b7280;
+    /* Gray color for percentage text */
+}
+
+.poll-total-votes {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    color: #2563eb;
+    /* Blue text for total votes */
+    margin-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    /* Light border to separate total votes */
+    padding-top: 1rem;
+}
+
+.poll-total-votes span {
+    font-size: 1.25rem;
+    /* Larger text for total votes */
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+    margin-top: 0.5rem;
+}
+
+.progress {
+    height: 100%;
+    background-color: #2563eb;
+    /* Blue progress bar */
+    border-radius: 9999px;
+}
+
+/* Confirmation Modal */
+.confirmation-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    max-width: 400px;
+    text-align: center;
+    color: #1f2937;
+}
+
+.alert-icon {
+    width: 3rem;
+    height: 3rem;
+    color: #2563eb;
+    /* Blue icon */
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.cancel-button,
+.confirm-button {
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.375rem;
+}
+
+.cancel-button {
+    background-color: #f3f4f6;
+    color: #1f2937;
+}
+
+.confirm-button {
+    background-color: #2563eb;
+    /* Blue confirm button */
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #d1d5db;
+}
+
+.confirm-button:hover {
+    background-color: #1d4ed8;
+    /* Darker blue on hover */
+}
+
+/* Logout Button */
+.logout-button {
+    background-color: #2563eb;
+    /* Blue logout button */
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.logout-button:hover {
+    background-color: #1d4ed8;
+    /* Darker blue on hover */
+}
